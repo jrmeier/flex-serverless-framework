@@ -20,6 +20,7 @@ export const getConnection = async ({ dbUri, stage }) => {
   mongoose.set('autoIndex', stage !== 'prod')
 
   mongoose.set('strictQuery', true)
+
   if (!dbConnection) {
     dbConnection = mongoose.connect(dbUri, MONGOOSE_CONFIG)
     await dbConnection

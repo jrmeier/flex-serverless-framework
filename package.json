@@ -14,7 +14,7 @@
     "*": "prettier --ignore-unknown -w",
     "*.js": "eslint --color --fix"
   },
-  "repository": "git+https://github.com/Clark-s-Software-Consulting/flex-framework.git",
+  "repository": "git+https://github.com/jrmeier/flex-serverless-framework.git",
   "keywords": [
     "media",
     "s3",
@@ -23,9 +23,9 @@
   "author": "Michael W. Clark & Jed Meier",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Clark-s-Software-Consulting/flex-framework/issues"
+    "url": "https://github.com/jrmeier/flex-serverless-framework/issues"
   },
-  "homepage": "https://github.com/Clark-s-Software-Consulting/flex-framework#readme",
+  "homepage": "https://github.com/jrmeier/flex-serverless-framework#readme",
   "workspaces": [
     "packages/*",
     "libs/*",
@@ -37,7 +37,7 @@
   },
   "private": true,
   "engines": {
-    "node": ">=18.18.0"
+    "node": "18.18.0"
   },
   "main": "index.js",
   "dependencies": {
