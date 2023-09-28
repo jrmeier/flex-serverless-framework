@@ -25,3 +25,5 @@ pulumi/aws-resources/event-bus/serverless/package-lock.json
 pulumi/aws-resources/route53/hosted-zone/Pulumi.prod.yam
 env.json
 .env
+
+.github/workflows/

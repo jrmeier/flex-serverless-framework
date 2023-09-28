@@ -1,19 +1,19 @@
 import * as connect from './connect'
-import { afterEach } from '@jest/globals'
+import { afterEach } from '@vi/globals'
 
-jest.mock('mongoose', () => ({
-  ...jest.requireActual('mongoose'),
-  connect: jest.fn(() => 'mockConnection'),
-  plugin: jest.fn(() => 'mockPlugins'),
+vi.mock('mongoose', () => ({
+  ...vi.requireActual('mongoose'),
+  connect: vi.fn(() => 'mockConnection'),
+  plugin: vi.fn(() => 'mockPlugins'),
   connection: {
-    close: jest.fn(() => 'mockClose')
+    close: vi.fn(() => 'mockClose')
   }
 }))
 
 describe('connect', () => {
   afterEach(() => {
-    jest.clearAllMocks()
-    jest.resetAllMocks()
+    vi.clearAllMocks()
+    vi.resetAllMocks()
   })
 
   test('getConnection should be singleton and connect', async () => {
@@ -32,12 +32,12 @@ describe('connect', () => {
   })
 
   test('closeConnection should succesfully be called', async () => {
-    jest.mock('mongoose', () => ({
-      ...jest.requireActual('mongoose'),
-      connect: jest.fn(() => 'mockConnection'),
-      plugin: jest.fn(() => 'mockPlugins'),
+    vi.mock('mongoose', () => ({
+      ...vi.requireActual('mongoose'),
+      connect: vi.fn(() => 'mockConnection'),
+      plugin: vi.fn(() => 'mockPlugins'),
       connection: {
-        close: jest.fn(() => 'mockClose')
+        close: vi.fn(() => 'mockClose')
       }
     }))
     const result = await connect.closeConnection()

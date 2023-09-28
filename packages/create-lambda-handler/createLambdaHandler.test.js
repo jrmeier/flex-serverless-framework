@@ -1,4 +1,4 @@
-import { beforeEach } from '@jest/globals'
+// import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { Logger } from './logger'
 import { createLambdaHandler } from './createLambdaHandler'
@@ -6,32 +6,33 @@ import { eventToPayload } from './eventToPayload'
 import { faker } from '@faker-js/faker'
 import { getConnection } from '@flex/db/connect'
 
-jest.mock('./logger', () => ({
-  Logger: jest.fn()
+vi.mock('./logger', () => ({
+  Logger: vi.fn()
 }))
 
-jest.mock('@flex/db/connect', () => ({
-  getConnection: jest.fn(),
-  closeConnection: jest.fn()
+vi.mock('@flex/db/connect', () => ({
+  getConnection: vi.fn(),
+  closeConnection: vi.fn()
 }))
 
-jest.mock('./eventToPayload', () => ({
-  eventToPayload: jest.fn((payload) => ({ ...payload, _eventToPayload: true }))
+vi.mock('./eventToPayload', () => ({
+  eventToPayload: vi.fn((payload) => ({ ...payload, _eventToPayload: true }))
 }))
 
-jest.mock('./returnHandler', () => ({
-  makeReturnHandler: jest.fn(() =>
-    jest.fn((payload) => ({ ...payload, _makeReturnHandler: true }))
+vi.mock('./returnHandler', () => ({
+  makeReturnHandler: vi.fn(() =>
+    vi.fn((payload) => ({ ...payload, _makeReturnHandler: true }))
   )
 }))
 
 describe('createLambdaHandler', () => {
   beforeEach(() => {
-    jest.resetModules() // Most important - it clears the cache
+    vi.resetModules() // Most important - it clears the cache
   })
 
+
   test('createLambdaHandler return a function', async () => {
-    const mockFn = jest.fn(() => 'test')
+    const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
       serviceVersion: faker.datatype.string()
@@ -40,8 +41,8 @@ describe('createLambdaHandler', () => {
   })
 
   test('createLambdaHandler calls the function and does setup', async () => {
-    const mockFn = jest.fn(() => 'test')
-    process.setMaxListeners = jest.fn()
+    const mockFn = vi.fn(() => 'test')
+    process.setMaxListeners = vi.fn()
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
       serviceVersion: faker.datatype.string()
@@ -60,7 +61,7 @@ describe('createLambdaHandler', () => {
   })
 
   test('createLambdaHandler sets up logger', async () => {
-    const mockFn = jest.fn(() => 'test')
+    const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
       serviceVersion: faker.datatype.string()
@@ -77,7 +78,7 @@ describe('createLambdaHandler', () => {
   })
 
   test('createLambdaHandler sets up database', async () => {
-    const mockFn = jest.fn(() => 'test')
+    const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
       serviceVersion: faker.datatype.string()
@@ -94,7 +95,7 @@ describe('createLambdaHandler', () => {
   })
 
   test('createLambdaHandler sets up event parameters', async () => {
-    const mockFn = jest.fn(() => 'test')
+    const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
       serviceVersion: faker.datatype.string()
@@ -111,7 +112,7 @@ describe('createLambdaHandler', () => {
   })
 
   test('createLambdaHandler process results via return handler', async () => {
-    const mockFn = jest.fn(() => 'test')
+    const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
       serviceVersion: faker.datatype.string()

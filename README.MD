@@ -16,8 +16,8 @@ npm i --save-dev serverless-offline-aws-eventbridge
 ## Scripts
 
 - `prepare` - Installs husky and creates a mongo-data directory
-- `test` - Runs Jest tests
-- `test:coverage` - Runs Jest tests and generates a coverage report
+- `test` - Runs vi tests
+- `test:coverage` - Runs vi tests and generates a coverage report
 - `precommit` - Runs lint-staged
 - `dev` - Runs serverless-offline
 

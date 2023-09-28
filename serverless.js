@@ -87,7 +87,7 @@ const serverlessPackageConfig = {
       hostname: '127.0.0.1', // IP or hostname of existing EventBridge if mocked by another stack
       pubSubPort: 4011, //  Port to run the MQ server (or just listen if using an EventBridge Mock server from another stack)
       debug: false, // flag to show debug messages
-      account: '112233445566', // account id that gets passed to the event
+      account: process.env.AWS_ACCOUNT_ID, // account id that gets passed to the event
       maximumRetryAttempts: 0, // maximumRetryAttempts to retry lambda
       retryDelayMs: 500, // retry delay
       payloadSizeLimit: '10mb' // Controls the maximum payload size being passed to https://www.npmjs.com/package/bytes (Note: this payload size might not be the same size as your AWS Eventbridge receive)

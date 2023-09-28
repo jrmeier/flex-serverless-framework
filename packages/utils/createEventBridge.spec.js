@@ -1,9 +1,12 @@
 import { createEventBridge } from './createEventBridge'
 import { faker } from '@faker-js/faker'
 import AWS from 'aws-sdk'
+import { vi } from 'vitest'
 
-jest.mock('aws-sdk', () => ({
-  EventBridge: jest.fn()
+vi.mock('aws-sdk', () => ({
+  default: {
+    EventBridge: vi.fn()
+  }
 }))
 
 describe('createEventBridge', () => {
@@ -19,7 +22,7 @@ describe('createEventBridge', () => {
   })
 
   afterEach(() => {
-    jest.clearAllMocks()
+    vi.clearAllMocks()
   })
 
   test('should create an event bridge', () => {

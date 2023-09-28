@@ -10,9 +10,9 @@ describe('makeReturnHandler', () => {
       gitSha: faker.datatype.string(),
       deployTime: faker.datatype.string()
     }
-    Date.now = jest.fn(() => new Date('2021-01-01T00:00:00.000Z').valueOf())
-    Date.prototype.toISOString = jest.fn(() => '2021-01-01T00:00:00.000Z')
-    jest.clearAllMocks()
+    Date.now = vi.fn(() => new Date('2021-01-01T00:00:00.000Z').valueOf())
+    Date.prototype.toISOString = vi.fn(() => '2021-01-01T00:00:00.000Z')
+    vi.clearAllMocks()
   })
 
   it('should return a handler', () => {

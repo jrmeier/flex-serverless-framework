@@ -2,8 +2,8 @@
   "name": "@flex/framework",
   "version": "1.0.0",
   "scripts": {
-    "test": "STAGE=test jest",
-    "test:coverage": "STAGE=test jest --coverage",
+    "test": "STAGE=test vitest",
+    "test:coverage": "STAGE=test vitest --coverage",
     "precommit": "lint-staged",
     "dev": "sls offline",
     "flex": "npx babel-node ./packages/cli"
@@ -32,8 +32,11 @@
     "services/*"
   ],
   "devDependencies": {
+    "@faker-js/faker": "^8.1.0",
+    "faker-js": "^1.0.0",
     "serverless-add-api-key": "^4.2.1",
-    "serverless-bundle": "^6.0.0"
+    "serverless-bundle": "^6.0.0",
+    "vitest": "^0.34.5"
   },
   "private": true,
   "engines": {

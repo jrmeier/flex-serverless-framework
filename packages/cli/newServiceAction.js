@@ -89,12 +89,12 @@ export const handler = createLambdaHandler({
 
     // create the new service tests
     const testFileContents = `import { ${serviceName}Handler } from './${serviceName}.js'
-import { afterEach } from '@jest/globals'
+import { afterEach } from '@vi/globals'
 
 describe('${serviceName}Handler', () => {
     afterEach(() => {
-        jest.clearAllMocks()
-        jest.resetAllMocks()
+        vi.clearAllMocks()
+        vi.resetAllMocks()
     })
 
     it('should do something', async () => {

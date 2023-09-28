@@ -1,6 +1,6 @@
-import { configureLambdaContext } from './configureLambdaContext'
+import { configureLambdaContext } from './configureLambdaContext';
 
-test('configureLambdaContext', () => {
+it('configureLambdaContext', () => {
   const mockContext = {
     callbackWaitsForEmptyEventLoop: true
   }
@@ -16,4 +16,4 @@ test('configureLambdaContext', () => {
     _context: mockContext
   })
   expect(mockContext.callbackWaitsForEmptyEventLoop).toBe(false)
-})
+});

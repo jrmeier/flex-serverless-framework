@@ -10,7 +10,7 @@ describe('promiseMap', () => {
     const result = await promiseMap(promises, 1)
     expect(result).toEqual([1, 2, 3])
   })
-  // eslint-disable-next-line jest/no-identical-title
+  // eslint-disable-next-line vi/no-identical-title
   test('should return a promise that resolves to an array of the results of the promises', async () => {
     const promises = [
       new Promise((resolve) => setTimeout(() => resolve(1), 4000)),
