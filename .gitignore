@@ -4,8 +4,6 @@ node_modules
 .build
 .env*
 .vscode
-lerna-debug.log
-yarn-error.log
 *.log
 coverage/*
 .serverless/
@@ -15,7 +13,6 @@ out.json
 .webpack
 .sourcemaps
 *.mongodb
-package-lock.json
 serverless-compose.yml
 pulumi/aws-resources/acm/api-certificate/Pulumi.prod.yaml          
 pulumi/aws-resources/apigateway/api-rest/Pulumi.prod.yaml          
