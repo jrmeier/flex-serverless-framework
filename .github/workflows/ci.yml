@@ -12,6 +12,7 @@ on:
       - closed
     branches-ignore:
       - 'renovate/**'
+    workflow_dispatch:
 
 jobs:
   cancel:
