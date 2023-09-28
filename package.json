@@ -1,0 +1,48 @@
+{
+  "name": "@flex/framework",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "STAGE=test jest",
+    "test:coverage": "STAGE=test jest --coverage",
+    "precommit": "lint-staged",
+    "dev": "sls offline",
+    "flex": "npx babel-node ./packages/cli"
+  },
+  "prettier": "prettier-config-standard",
+  "pre-commit": "lint-staged",
+  "lint-staged": {
+    "*": "prettier --ignore-unknown -w",
+    "*.js": "eslint --color --fix"
+  },
+  "repository": "git+https://github.com/Clark-s-Software-Consulting/flex-framework.git",
+  "keywords": [
+    "media",
+    "s3",
+    "lambda"
+  ],
+  "author": "Michael W. Clark & Jed Meier",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Clark-s-Software-Consulting/flex-framework/issues"
+  },
+  "homepage": "https://github.com/Clark-s-Software-Consulting/flex-framework#readme",
+  "workspaces": [
+    "packages/*",
+    "libs/*",
+    "services/*"
+  ],
+  "devDependencies": {
+    "serverless-add-api-key": "^4.2.1",
+    "serverless-bundle": "^6.0.0"
+  },
+  "private": true,
+  "engines": {
+    "node": ">=18.18.0"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "eslint": "^7.32.0",
+    "serverless-offline": "^13.1.1",
+    "serverless-offline-aws-eventbridge": "^2.1.0"
+  }
+}

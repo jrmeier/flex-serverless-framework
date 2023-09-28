@@ -1,0 +1,9 @@
+{
+  "name": "@flex/create-lambda-handler",
+  "version": "1.0.0",
+  "main": "createLambdaHandler.js",
+  "license": "MIT",
+  "scripts": {},
+  "dependencies": {},
+  "devDependencies": {}
+}

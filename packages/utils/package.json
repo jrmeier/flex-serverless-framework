@@ -1,0 +1,9 @@
+{
+  "name": "@flex/utils",
+  "version": "1.0.0",
+  "description": "generic utility functions.",
+  "main": "index.js",
+  "author": "Michael W. Clark",
+  "license": "MIT",
+  "private": true
+}

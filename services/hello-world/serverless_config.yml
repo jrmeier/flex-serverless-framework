@@ -1,0 +1,13 @@
+functions:
+  helloWorld:
+    name: ${env:PROJECT_SLUG}-${sls:stage}-${self:service}
+    handler: helloWorld.handler
+    timeout: 30
+    provisionedConcurrency: 1 # number of instances to keep warm
+    memorySize: 128
+    reservedConcurrency: 1 # max number of workers to run concurrently
+    events:
+      - http:
+          path: /hello-world
+          method: GET
+          private: true

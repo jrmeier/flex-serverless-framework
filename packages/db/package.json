@@ -1,0 +1,13 @@
+{
+  "name": "@flex/db",
+  "version": "1.0.0",
+  "description": "MongoDB access.",
+  "main": "index.js",
+  "author": "Jed Meier",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
