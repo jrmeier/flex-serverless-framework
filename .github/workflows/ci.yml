@@ -12,7 +12,7 @@ on:
       - closed
     branches-ignore:
       - 'renovate/**'
-    workflow_dispatch:
+  workflow_dispatch:
 jobs:
   cancel:
     name: 'Cancel Previous Runs'
