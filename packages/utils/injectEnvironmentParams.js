@@ -5,12 +5,12 @@ const GIT_BRANCH = childProcess
   .toString()
   .trim()
 
-const GIT_SHA = childProcess.execSync(`git rev-parse HEAD`).toString().trim()
+const GIT_SHA = childProcess.execSync('git rev-parse HEAD').toString().trim()
 
 const injectEnvironmentParams = (coreConfig, serviceConfig) => {
   const { functions, ...restServiceConfig } = serviceConfig
   const {
-    params: { default: defaultParams }
+    params: { default: defaultParams },
   } = coreConfig
   const functionsNames = Object.keys(functions)
 
@@ -26,22 +26,22 @@ const injectEnvironmentParams = (coreConfig, serviceConfig) => {
               ...Object.keys(defaultParams).reduce(
                 (env, key) => ({
                   [key]: `\${param:${key}}`,
-                  ...env
+                  ...env,
                 }),
                 {
                   STAGE: '${sls:stage}',
                   SERVICE: functions[name].name,
                   GIT_SHA,
                   GIT_BRANCH,
-                  DEPLOY_TIME: new Date().toISOString()
-                }
-              )
-            }
-          }
+                  DEPLOY_TIME: new Date().toISOString(),
+                },
+              ),
+            },
+          },
         }),
-        {}
-      )
-    }
+        {},
+      ),
+    },
   }
 }
 

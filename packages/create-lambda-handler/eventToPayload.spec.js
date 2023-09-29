@@ -1,3 +1,4 @@
+import { faker } from '@faker-js/faker'
 import {
   eventToPayload,
   hoistDetail,
@@ -6,29 +7,26 @@ import {
   hoistEventRecords,
   hoistMultiValueQueryStringParameters,
   hoistPathParameters,
-  hoistQueryStringParameters
+  hoistQueryStringParameters,
 } from './eventToPayload'
-import { faker } from '@faker-js/faker'
 
-const getFakeObject = () => {
-  return {
-    [faker.datatype.string()]: faker.datatype.string()
-  }
-}
+const getFakeObject = () => ({
+  [faker.datatype.string()]: faker.datatype.string(),
+})
 
 test('hoistPathParameters', () => {
   const event = {
     _event: {
       ...getFakeObject(),
-      pathParameters: getFakeObject()
+      pathParameters: getFakeObject(),
     },
-    _context: getFakeObject()
+    _context: getFakeObject(),
   }
   const result = hoistPathParameters(event)
   expect(result).toEqual({
     _event: event._event,
     _context: event._context,
-    ...event._event.pathParameters
+    ...event._event.pathParameters,
   })
 })
 
@@ -36,15 +34,15 @@ test('hoistQueryStringParameters', () => {
   const event = {
     _event: {
       ...getFakeObject(),
-      queryStringParameters: getFakeObject()
+      queryStringParameters: getFakeObject(),
     },
-    _context: getFakeObject()
+    _context: getFakeObject(),
   }
   const result = hoistQueryStringParameters(event)
   expect(result).toEqual({
     _event: event._event,
     _context: event._context,
-    ...event._event.queryStringParameters
+    ...event._event.queryStringParameters,
   })
 })
 
@@ -54,17 +52,17 @@ test('hoistMultiValueQueryStringParameters', () => {
       ...getFakeObject(),
       multiValueQueryStringParameters: {
         param1: [getFakeObject(), getFakeObject()],
-        param2: [getFakeObject()]
+        param2: [getFakeObject()],
       },
-      _context: getFakeObject()
-    }
+      _context: getFakeObject(),
+    },
   }
 
   const result = hoistMultiValueQueryStringParameters(event)
   expect(result).toEqual({
     _event: event._event,
     _context: event._context,
-    param1: event._event.multiValueQueryStringParameters.param1
+    param1: event._event.multiValueQueryStringParameters.param1,
   })
 })
 
@@ -72,14 +70,14 @@ test('hoistMultiValueQueryStringParameters return if not exist', () => {
   const event = {
     _event: {
       ...getFakeObject(),
-      _context: getFakeObject()
-    }
+      _context: getFakeObject(),
+    },
   }
 
   const result = hoistMultiValueQueryStringParameters(event)
   expect(result).toEqual({
     _event: event._event,
-    _context: event._context
+    _context: event._context,
   })
 })
 
@@ -87,30 +85,30 @@ test('hoistEventBody', () => {
   const event = {
     _event: {
       ...getFakeObject(),
-      body: JSON.stringify(getFakeObject())
+      body: JSON.stringify(getFakeObject()),
     },
-    _context: getFakeObject()
+    _context: getFakeObject(),
   }
   const result = hoistEventBody(event)
   expect(result).toEqual({
     _event: event._event,
     _context: event._context,
-    ...JSON.parse(event._event.body)
+    ...JSON.parse(event._event.body),
   })
 })
 
 test('hoistEventBody no body', () => {
   const event = {
     _event: {
-      ...getFakeObject()
+      ...getFakeObject(),
     },
-    _context: getFakeObject()
+    _context: getFakeObject(),
   }
 
   const result = hoistEventBody(event)
   expect(result).toEqual({
     _event: event._event,
-    _context: event._context
+    _context: event._context,
   })
 })
 
@@ -118,16 +116,16 @@ test('hoistEventBody JSON', () => {
   const event = {
     _event: {
       ...getFakeObject(),
-      body: JSON.stringify(getFakeObject())
+      body: JSON.stringify(getFakeObject()),
     },
-    _context: getFakeObject()
+    _context: getFakeObject(),
   }
 
   const result = hoistEventBody(event)
   expect(result).toEqual({
     _event: event._event,
     _context: event._context,
-    ...JSON.parse(event._event.body)
+    ...JSON.parse(event._event.body),
   })
 })
 
@@ -135,16 +133,16 @@ test('hoistEventRecords', () => {
   const event = {
     _event: {
       ...getFakeObject(),
-      Records: getFakeObject()
+      Records: getFakeObject(),
     },
-    _context: getFakeObject()
+    _context: getFakeObject(),
   }
 
   const result = hoistEventRecords(event)
   expect(result).toEqual({
     _event: event._event,
     _context: event._context,
-    ...event._event.Records
+    ...event._event.Records,
   })
 })
 
@@ -152,16 +150,16 @@ test('hoistEventBridge', () => {
   const event = {
     _event: {
       ...getFakeObject(),
-      event_bridge: getFakeObject()
+      event_bridge: getFakeObject(),
     },
-    _context: getFakeObject()
+    _context: getFakeObject(),
   }
 
   const result = hoistEventBridge(event)
   expect(result).toEqual({
     _event: event._event,
     _context: event._context,
-    ...event._event.event_bridge
+    ...event._event.event_bridge,
   })
 })
 
@@ -169,16 +167,16 @@ test('hoistDetail', () => {
   const event = {
     _event: {
       ...getFakeObject(),
-      detail: getFakeObject()
+      detail: getFakeObject(),
     },
-    _context: getFakeObject()
+    _context: getFakeObject(),
   }
 
   const result = hoistDetail(event)
   expect(result).toEqual({
     _event: event._event,
     _context: event._context,
-    ...event._event.detail
+    ...event._event.detail,
   })
 })
 
@@ -190,14 +188,14 @@ test('eventToPayload', async () => {
       queryStringParameters: getFakeObject(),
       multiValueQueryStringParameters: {
         param1: [getFakeObject(), getFakeObject()],
-        param2: [getFakeObject()]
+        param2: [getFakeObject()],
       },
       body: JSON.stringify(getFakeObject()),
       Records: getFakeObject(),
       event_bridge: getFakeObject(),
-      detail: getFakeObject()
+      detail: getFakeObject(),
     },
-    _context: getFakeObject()
+    _context: getFakeObject(),
   }
 
   const result = await eventToPayload(event)
@@ -210,6 +208,6 @@ test('eventToPayload', async () => {
     ...JSON.parse(event._event.body),
     ...event._event.Records,
     ...event._event.event_bridge,
-    ...event._event.detail
+    ...event._event.detail,
   })
 })

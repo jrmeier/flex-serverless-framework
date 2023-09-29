@@ -3,7 +3,7 @@ const LEVEL_MAP = {
   info: 2,
   log: 3,
   warn: 4,
-  error: 5
+  error: 5,
 }
 
 export class Logger {
@@ -15,7 +15,7 @@ export class Logger {
     deployTime,
     stage,
     service,
-    logLevel
+    logLevel,
   }) {
     this.record = {
       handlerName,
@@ -25,7 +25,7 @@ export class Logger {
       deployTime,
       stage,
       service,
-      logLevel
+      logLevel,
     }
   }
 
@@ -39,7 +39,7 @@ export class Logger {
     }
     this.record = {
       ...this.record,
-      time
+      time,
     }
 
     this.record.message = message
@@ -50,7 +50,7 @@ export class Logger {
         message: message.message,
         name: message.name,
         payload: message,
-        stack: message?.stack
+        stack: message?.stack,
       }
 
       console.error(context)

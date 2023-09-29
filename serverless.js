@@ -1,68 +1,66 @@
-const fs = require('fs')
+const fs = require('fs');
 
-const readYamlFile = require('@flex/utils/readYamlFile')
-const injectEnvironmentParams = require('@flex/utils/injectEnvironmentParams')
+const readYamlFile = require('@flex/utils/readYamlFile');
+const injectEnvironmentParams = require('@flex/utils/injectEnvironmentParams');
 
 // Read .env file only for local development. In production, environment variables are set in the CI Pipe via yaml injection.
-const dotenv = require('dotenv')
-dotenv.config({ path: '.env' })
+const dotenv = require('dotenv');
 
-const SERVICES_PATH = 'services/'
-const RUN_SCHEDULER =
-  process.argv.includes('--run-scheduler') ||
-  process.argv.includes('--runScheduler')
-const coreConfig = readYamlFile('./serverless_core.yml')
+dotenv.config({ path: '.env' });
+
+const SERVICES_PATH = 'services/';
+const RUN_SCHEDULER = process.argv.includes('--run-scheduler')
+  || process.argv.includes('--runScheduler');
+const coreConfig = readYamlFile('./serverless_core.yml');
 const buildHandlers = () => {
-  const folders = fs.readdirSync(SERVICES_PATH)
+  const folders = fs.readdirSync(SERVICES_PATH);
   const config = folders.reduce(
     (handlers, folder) => ({
       ...handlers,
-      ...buildServerlessServiceConfig(folder)
+      ...buildServerlessServiceConfig(folder),
     }),
-    {}
-  )
-  return config
-}
+    {},
+  );
+  return config;
+};
 
 const buildServerlessServiceConfig = (serviceDir) => {
-  const fullServiceDir = `${SERVICES_PATH}${serviceDir}`
-  const packageServerlessConfigPath = `${SERVICES_PATH}/${serviceDir}/serverless_config.yml`
-  const serverlessConfig = readYamlFile(packageServerlessConfigPath)
+  const fullServiceDir = `${SERVICES_PATH}${serviceDir}`;
+  const packageServerlessConfigPath = `${SERVICES_PATH}/${serviceDir}/serverless_config.yml`;
+  const serverlessConfig = readYamlFile(packageServerlessConfigPath);
   const injectedServiceConfig = injectEnvironmentParams(
     coreConfig,
-    serverlessConfig
-  )
-  const serviceFunctions = injectedServiceConfig.functions
+    serverlessConfig,
+  );
+  const serviceFunctions = injectedServiceConfig.functions;
   const config = Object.entries(serviceFunctions).reduce(
-    (serviceConfig, [functionName, functionConfig]) => {
-      return {
-        ...serviceConfig,
-        [functionName]: {
-          ...removeSchedule(functionConfig),
-          handler: `${fullServiceDir}/${functionConfig.handler}`
-        }
-      }
-    },
-    {}
-  )
+    (serviceConfig, [functionName, functionConfig]) => ({
+      ...serviceConfig,
+      [functionName]: {
+        ...removeSchedule(functionConfig),
+        handler: `${fullServiceDir}/${functionConfig.handler}`,
+      },
+    }),
+    {},
+  );
 
-  return config
-}
+  return config;
+};
 
 const removeSchedule = (fnConfig) => {
-  const { events, ...rest } = fnConfig
+  const { events, ...rest } = fnConfig;
   if (!RUN_SCHEDULER) {
     return {
       ...rest,
-      events: events.filter((event) => !Object.keys(event).includes('schedule'))
-    }
+      events: events.filter((event) => !Object.keys(event).includes('schedule')),
+    };
   }
 
   return {
     ...rest,
-    events
-  }
-}
+    events,
+  };
+};
 
 const serverlessPackageConfig = {
   service: `${process.env.PROJECT_SLUG}-dev`,
@@ -70,16 +68,16 @@ const serverlessPackageConfig = {
   plugins: [
     ...coreConfig.plugins,
     'serverless-offline',
-    'serverless-offline-aws-eventbridge'
+    'serverless-offline-aws-eventbridge',
   ],
   functions: {
-    ...buildHandlers()
+    ...buildHandlers(),
   },
   custom: {
     ...coreConfig.custom,
     'serverless-offline': {
       // watch: ['services/**', 'serverless_core.yml', 'packages/**'],
-      allowCache: true
+      allowCache: true,
     },
     'serverless-offline-aws-eventbridge': {
       port: 4010, //  port to run the eventBridge mock server on
@@ -90,13 +88,13 @@ const serverlessPackageConfig = {
       account: process.env.AWS_ACCOUNT_ID, // account id that gets passed to the event
       maximumRetryAttempts: 0, // maximumRetryAttempts to retry lambda
       retryDelayMs: 500, // retry delay
-      payloadSizeLimit: '10mb' // Controls the maximum payload size being passed to https://www.npmjs.com/package/bytes (Note: this payload size might not be the same size as your AWS Eventbridge receive)
-    }
-  }
-}
+      payloadSizeLimit: '10mb', // Controls the maximum payload size being passed to https://www.npmjs.com/package/bytes (Note: this payload size might not be the same size as your AWS Eventbridge receive)
+    },
+  },
+};
 
 if (process.argv.includes('--printConfig')) {
-  console.log(JSON.stringify(serverlessPackageConfig, null, 3))
+  console.log(JSON.stringify(serverlessPackageConfig, null, 3));
 }
 
-module.exports = serverlessPackageConfig
+module.exports = serverlessPackageConfig;

@@ -1,28 +1,26 @@
 // import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 
+import { faker } from '@faker-js/faker'
+import { getConnection } from '@flex/db/connect'
 import { Logger } from './logger'
 import { createLambdaHandler } from './createLambdaHandler'
 import { eventToPayload } from './eventToPayload'
-import { faker } from '@faker-js/faker'
-import { getConnection } from '@flex/db/connect'
 
 vi.mock('./logger', () => ({
-  Logger: vi.fn()
+  Logger: vi.fn(),
 }))
 
 vi.mock('@flex/db/connect', () => ({
   getConnection: vi.fn(),
-  closeConnection: vi.fn()
+  closeConnection: vi.fn(),
 }))
 
 vi.mock('./eventToPayload', () => ({
-  eventToPayload: vi.fn((payload) => ({ ...payload, _eventToPayload: true }))
+  eventToPayload: vi.fn((payload) => ({ ...payload, _eventToPayload: true })),
 }))
 
 vi.mock('./returnHandler', () => ({
-  makeReturnHandler: vi.fn(() =>
-    vi.fn((payload) => ({ ...payload, _makeReturnHandler: true }))
-  )
+  makeReturnHandler: vi.fn(() => vi.fn((payload) => ({ ...payload, _makeReturnHandler: true }))),
 }))
 
 describe('createLambdaHandler', () => {
@@ -30,12 +28,11 @@ describe('createLambdaHandler', () => {
     vi.resetModules() // Most important - it clears the cache
   })
 
-
   test('createLambdaHandler return a function', async () => {
     const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
-      serviceVersion: faker.datatype.string()
+      serviceVersion: faker.datatype.string(),
     })
     expect(handler).toBeInstanceOf(Function)
   })
@@ -45,14 +42,14 @@ describe('createLambdaHandler', () => {
     process.setMaxListeners = vi.fn()
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
-      serviceVersion: faker.datatype.string()
+      serviceVersion: faker.datatype.string(),
     })
     const mockEvent = {
-      [faker.datatype.string()]: faker.datatype.string()
+      [faker.datatype.string()]: faker.datatype.string(),
     }
     const mockContext = {
       [faker.datatype.string()]: faker.datatype.string(),
-      callbackWaitsForEmptyEventLoop: true
+      callbackWaitsForEmptyEventLoop: true,
     }
     await handler(mockEvent, mockContext)
     expect(mockFn).toHaveBeenCalled()
@@ -64,14 +61,14 @@ describe('createLambdaHandler', () => {
     const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
-      serviceVersion: faker.datatype.string()
+      serviceVersion: faker.datatype.string(),
     })
     const mockEvent = {
-      [faker.datatype.string()]: faker.datatype.string()
+      [faker.datatype.string()]: faker.datatype.string(),
     }
     const mockContext = {
       [faker.datatype.string()]: faker.datatype.string(),
-      callbackWaitsForEmptyEventLoop: true
+      callbackWaitsForEmptyEventLoop: true,
     }
     await handler(mockEvent, mockContext)
     expect(Logger).toHaveBeenCalled()
@@ -81,14 +78,14 @@ describe('createLambdaHandler', () => {
     const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
-      serviceVersion: faker.datatype.string()
+      serviceVersion: faker.datatype.string(),
     })
     const mockEvent = {
-      [faker.datatype.string()]: faker.datatype.string()
+      [faker.datatype.string()]: faker.datatype.string(),
     }
     const mockContext = {
       [faker.datatype.string()]: faker.datatype.string(),
-      callbackWaitsForEmptyEventLoop: true
+      callbackWaitsForEmptyEventLoop: true,
     }
     await handler(mockEvent, mockContext)
     expect(getConnection).toHaveBeenCalled()
@@ -98,14 +95,14 @@ describe('createLambdaHandler', () => {
     const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
-      serviceVersion: faker.datatype.string()
+      serviceVersion: faker.datatype.string(),
     })
     const mockEvent = {
-      [faker.datatype.string()]: faker.datatype.string()
+      [faker.datatype.string()]: faker.datatype.string(),
     }
     const mockContext = {
       [faker.datatype.string()]: faker.datatype.string(),
-      callbackWaitsForEmptyEventLoop: true
+      callbackWaitsForEmptyEventLoop: true,
     }
     await handler(mockEvent, mockContext)
     expect(eventToPayload).toHaveBeenCalled()
@@ -115,14 +112,14 @@ describe('createLambdaHandler', () => {
     const mockFn = vi.fn(() => 'test')
     const handler = createLambdaHandler({
       handlerFunction: mockFn,
-      serviceVersion: faker.datatype.string()
+      serviceVersion: faker.datatype.string(),
     })
     const mockEvent = {
-      [faker.datatype.string()]: faker.datatype.string()
+      [faker.datatype.string()]: faker.datatype.string(),
     }
     const mockContext = {
       [faker.datatype.string()]: faker.datatype.string(),
-      callbackWaitsForEmptyEventLoop: true
+      callbackWaitsForEmptyEventLoop: true,
     }
     const results = await handler(mockEvent, mockContext)
     expect(results._makeReturnHandler).toBe(true)

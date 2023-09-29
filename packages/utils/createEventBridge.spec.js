@@ -1,12 +1,12 @@
-import { createEventBridge } from './createEventBridge'
 import { faker } from '@faker-js/faker'
 import AWS from 'aws-sdk'
 import { vi } from 'vitest'
+import { createEventBridge } from './createEventBridge'
 
 vi.mock('aws-sdk', () => ({
   default: {
-    EventBridge: vi.fn()
-  }
+    EventBridge: vi.fn(),
+  },
 }))
 
 describe('createEventBridge', () => {
@@ -17,7 +17,7 @@ describe('createEventBridge', () => {
       region: faker.datatype.string(),
       accessKeyId: faker.datatype.string(),
       secretAccessKey: faker.datatype.string(),
-      sessionToken: faker.datatype.string()
+      sessionToken: faker.datatype.string(),
     }
   })
 
@@ -33,26 +33,26 @@ describe('createEventBridge', () => {
   test('should create an event bridge with offline config', () => {
     const eventBridge = createEventBridge({
       ...mockConfig,
-      stage: 'dev'
+      stage: 'dev',
     })
     expect(eventBridge).toBeDefined()
     expect(AWS.EventBridge).toHaveBeenCalledWith({
       endpoint: 'http://127.0.0.1:4010',
-      region: mockConfig.region
+      region: mockConfig.region,
     })
   })
 
   test('should create an event bridge with online config', () => {
     const eventBridge = createEventBridge({
       ...mockConfig,
-      stage: 'prod'
+      stage: 'prod',
     })
     expect(eventBridge).toBeDefined()
     expect(AWS.EventBridge).toHaveBeenCalledWith({
       region: mockConfig.region,
       accessKeyId: mockConfig.accessKeyId,
       secretAccessKey: mockConfig.secretAccessKey,
-      sessionToken: mockConfig.sessionToken
+      sessionToken: mockConfig.sessionToken,
     })
   })
 })

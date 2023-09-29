@@ -12,7 +12,7 @@ const MONGOOSE_CONFIG = {
   retryReads: true,
   connectTimeoutMS: 10000,
   maxIdleTimeMS: 10000,
-  family: 4 // 4 (IPv4) or 6 (IPv6)
+  family: 4, // 4 (IPv4) or 6 (IPv6)
 }
 
 export const getConnection = async ({ dbUri, stage }) => {

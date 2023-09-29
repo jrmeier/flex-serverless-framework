@@ -27,31 +27,31 @@
  *    }
  *  }
  */
-export const makeReturnHandler =
-  ({ version = '0.0.0', gitBranch, gitSha, deployTime }) =>
-  (body) => {
-    // Determine whether the body should be stringified and whether
-    // the original body or a modified version should be used
-    const [returnBody, shouldStringify] = Array.isArray(body)
-      ? [body[0], body[1]]
-      : [body, true]
+export const makeReturnHandler = ({
+  version = '0.0.0', gitBranch, gitSha, deployTime,
+}) => (body) => {
+  // Determine whether the body should be stringified and whether
+  // the original body or a modified version should be used
+  const [returnBody, shouldStringify] = Array.isArray(body)
+    ? [body[0], body[1]]
+    : [body, true]
 
-    // Create the __meta object with the specified information
-    const __meta = {
-      gitBranch,
-      gitSha,
-      deployTime,
-      serverTime: new Date().toISOString(),
-      serviceVersion: version
-    }
-
-    // Create the result object with the body and __meta information
-    const result = {
-      statusCode: 200,
-      body: shouldStringify
-        ? JSON.stringify({ ...returnBody, __meta })
-        : returnBody
-    }
-
-    return result
+  // Create the __meta object with the specified information
+  const __meta = {
+    gitBranch,
+    gitSha,
+    deployTime,
+    serverTime: new Date().toISOString(),
+    serviceVersion: version,
   }
+
+  // Create the result object with the body and __meta information
+  const result = {
+    statusCode: 200,
+    body: shouldStringify
+      ? JSON.stringify({ ...returnBody, __meta })
+      : returnBody,
+  }
+
+  return result
+}

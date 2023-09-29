@@ -1,8 +1,8 @@
+import { buildComposer } from '@flex/db/graph/buildComposer'
+import { schemaComposer } from 'graphql-compose'
 import { buildUserRelations, buildUserTC } from '../schemas/user/UserGraph'
 
-import { buildComposer } from '@flex/db/graph/buildComposer'
 import { buildUnionTypes } from './buildUnionTypes'
-import { schemaComposer } from 'graphql-compose'
 
 /**
  * This function builds the GraphQL schema for the GraphQL API.
@@ -25,7 +25,7 @@ export const buildGraphSchema = ({ models }) => {
     return schemaComposer.buildSchema()
   } catch (e) {
     console.warn(e)
-    console.log("ERROR BU")
+    console.log('ERROR BU')
     return schemaComposer
   }
 }

@@ -5,18 +5,18 @@ export const createEventBridge = ({
   region,
   accessKeyId,
   secretAccessKey,
-  sessionToken
+  sessionToken,
 }) => {
   let eventBridgeConfig = {
     endpoint: 'http://127.0.0.1:4010',
-    region: region
+    region,
   }
   if (stage !== 'dev') {
     eventBridgeConfig = {
       region,
       accessKeyId,
       secretAccessKey,
-      sessionToken
+      sessionToken,
     }
   }
 

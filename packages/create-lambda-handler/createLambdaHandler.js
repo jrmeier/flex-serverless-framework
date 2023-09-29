@@ -5,11 +5,11 @@ import {
   GIT_SHA,
   LOG_LEVEL,
   SERVICE,
-  STAGE
+  STAGE,
 } from '@flex/utils/environment'
+import { getConnection } from '@flex/db/connect'
 import { Logger } from './logger'
 import { eventToPayload } from './eventToPayload'
-import { getConnection } from '@flex/db/connect'
 import { makeReturnHandler } from './returnHandler'
 
 /**
@@ -41,7 +41,7 @@ export const createLambdaHandler = ({ handlerFunction, serviceVersion }) => {
     deployTime: DEPLOY_TIME,
     stage: STAGE,
     service: SERVICE,
-    logLevel: LOG_LEVEL
+    logLevel: LOG_LEVEL,
   })
 
   // Create a return handler with the specified configuration
@@ -50,7 +50,7 @@ export const createLambdaHandler = ({ handlerFunction, serviceVersion }) => {
     version: serviceVersion,
     gitBranch: GIT_BRANCH,
     gitSha: GIT_SHA,
-    deployTime: DEPLOY_TIME
+    deployTime: DEPLOY_TIME,
   })
 
   // Initialize the payload object
@@ -72,7 +72,7 @@ export const createLambdaHandler = ({ handlerFunction, serviceVersion }) => {
         _event: event,
         _context: context,
         db,
-        logger
+        logger,
       })
 
       // Run the handler
@@ -81,25 +81,27 @@ export const createLambdaHandler = ({ handlerFunction, serviceVersion }) => {
       // Return the results
       return returnHandler(results)
     } catch (error) {
-      console.log('Error in createLambdaHandler: ',error)
+      console.log('Error in createLambdaHandler: ', error)
       console.error(error)
       // If there is an error, log it and return it.
       // Exclude unnecessary properties from the payload
-      const { _event, _context, logger, ...rest } = payload
+      const {
+        _event, _context, logger, ...rest // eslint-disable-line no-unused-vars
+      } = payload
       const newError = {
         payload: rest,
         error: {
           message: error.message,
           stack: error.stack,
           name: error.name,
-          ...error
-        }
+          ...error,
+        },
       }
 
       logger.error(newError)
       return {
         statusCode: 400,
-        body: JSON.stringify(newError)
+        body: JSON.stringify(newError),
       }
     }
   }

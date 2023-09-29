@@ -4,20 +4,20 @@ import { parse } from 'querystring'
 export const hoistPathParameters = ({ _event, ...rest }) => ({
   _event,
   ...rest,
-  ..._event?.pathParameters
+  ..._event?.pathParameters,
 })
 
 export const hoistQueryStringParameters = ({ _event, ...rest }) => ({
   _event,
   ...rest,
-  ..._event?.queryStringParameters
+  ..._event?.queryStringParameters,
 })
 
 export const hoistMultiValueQueryStringParameters = ({ _event, ...rest }) => {
   const { multiValueQueryStringParameters } = _event
   if (!multiValueQueryStringParameters) return { _event, ...rest }
   const multiValueParams = Object.entries(multiValueQueryStringParameters)
-    .filter(([_key, arrVal]) => arrVal.length > 1)
+    .filter(([_key, arrVal]) => arrVal.length > 1) // eslint-disable-line no-unused-vars
     .reduce((acc, [key, arrVal]) => {
       acc[key] = arrVal
       return acc
@@ -26,7 +26,7 @@ export const hoistMultiValueQueryStringParameters = ({ _event, ...rest }) => {
   return {
     _event,
     ...rest,
-    ...multiValueParams
+    ...multiValueParams,
   }
 }
 
@@ -41,26 +41,26 @@ export const hoistEventBody = ({ _event, ...rest }) => {
   return {
     _event,
     ...rest,
-    ...eventBodyPayload
+    ...eventBodyPayload,
   }
 }
 
 export const hoistEventRecords = ({ _event, ...rest }) => ({
   _event,
   ...rest,
-  ..._event?.Records
+  ..._event?.Records,
 })
 
 export const hoistEventBridge = ({ _event, ...rest }) => ({
   _event,
   ...rest,
-  ..._event?.event_bridge
+  ..._event?.event_bridge,
 })
 
 export const hoistDetail = ({ _event, ...rest }) => ({
   _event,
   ...rest,
-  ..._event?.detail
+  ..._event?.detail,
 })
 
 export const eventToPayload = asyncPipe(
@@ -70,5 +70,5 @@ export const eventToPayload = asyncPipe(
   hoistEventBody, // parse and hoist event.body
   hoistEventRecords, // hoist event.Records
   hoistEventBridge, // hoist event.event_bridge
-  hoistDetail // hoist event.detail
+  hoistDetail, // hoist event.detail
 )

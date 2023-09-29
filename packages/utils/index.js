@@ -9,5 +9,5 @@ export default {
   createEventBridge,
   injectEnvironmentParams,
   promiseMap,
-  readYamlFile
+  readYamlFile,
 }

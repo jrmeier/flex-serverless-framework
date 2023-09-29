@@ -1,5 +1,5 @@
 // import { schemaComposer } from 'graphql-compose'
-export const buildUnionTypes = (__typeComposers) => {
+export const buildUnionTypes = (__typeComposers) => { // eslint-disable-line no-unused-vars
   // Page
   // schemaComposer.createUnionTC({
   //   name: 'Page',

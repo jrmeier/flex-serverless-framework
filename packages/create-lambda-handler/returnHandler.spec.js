@@ -8,7 +8,7 @@ describe('makeReturnHandler', () => {
       version: faker.datatype.string(),
       gitBranch: faker.datatype.string(),
       gitSha: faker.datatype.string(),
-      deployTime: faker.datatype.string()
+      deployTime: faker.datatype.string(),
     }
     Date.now = vi.fn(() => new Date('2021-01-01T00:00:00.000Z').valueOf())
     Date.prototype.toISOString = vi.fn(() => '2021-01-01T00:00:00.000Z')
@@ -22,7 +22,7 @@ describe('makeReturnHandler', () => {
 
   it('should inject meta into all return objects', () => {
     const mockBody = {
-      [faker.datatype.string()]: faker.datatype.string()
+      [faker.datatype.string()]: faker.datatype.string(),
     }
 
     const handler = makeReturnHandler(mockConfig)
@@ -36,9 +36,9 @@ describe('makeReturnHandler', () => {
           gitSha: mockConfig.gitSha,
           deployTime: mockConfig.deployTime,
           serverTime: '2021-01-01T00:00:00.000Z',
-          serviceVersion: mockConfig.version
-        }
-      })
+          serviceVersion: mockConfig.version,
+        },
+      }),
     }
     expect(result).toEqual(expect.objectContaining(expectedReturn))
   })
@@ -46,14 +46,14 @@ describe('makeReturnHandler', () => {
   it('should return only first element of an array body', () => {
     const mockBody = [
       {
-        [faker.datatype.string()]: faker.datatype.string()
+        [faker.datatype.string()]: faker.datatype.string(),
       },
       {
-        [faker.datatype.string()]: faker.datatype.string()
+        [faker.datatype.string()]: faker.datatype.string(),
       },
       {
-        [faker.datatype.string()]: faker.datatype.string()
-      }
+        [faker.datatype.string()]: faker.datatype.string(),
+      },
     ]
 
     const handler = makeReturnHandler(mockConfig)
@@ -67,9 +67,9 @@ describe('makeReturnHandler', () => {
           gitSha: mockConfig.gitSha,
           deployTime: mockConfig.deployTime,
           serverTime: '2021-01-01T00:00:00.000Z',
-          serviceVersion: mockConfig.version
-        }
-      })
+          serviceVersion: mockConfig.version,
+        },
+      }),
     }
     expect(result).toEqual(expect.objectContaining(expectedReturn))
   })

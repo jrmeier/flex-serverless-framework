@@ -1,9 +1,0 @@
-{
-  "name": "@flex/cli",
-  "version": "1.0.0",
-  "description": "flex framework functions",
-  "main": "index.js",
-  "author": "Jed Meier",
-  "license": "MIT",
-  "private": true
-}

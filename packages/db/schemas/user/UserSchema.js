@@ -4,20 +4,20 @@ export const UserSchema = new Schema({
   username: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   email: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   password: {
-    type: String
+    type: String,
   },
   groups: [
     {
-      type: String
-    }
+      type: String,
+    },
   ],
   // Additional fields for AWS Cognito integration
   sub: String,
@@ -43,7 +43,7 @@ export const UserSchema = new Schema({
     locality: String,
     region: String,
     postal_code: String,
-    country: String
+    country: String,
   },
   updated_at: Date,
   identity_provider: String,
@@ -56,7 +56,7 @@ export const UserSchema = new Schema({
     {
       type: Schema.Types.ObjectId,
       ref: 'Subscription',
-      required: false
-    }
-  ]
+      required: false,
+    },
+  ],
 })
