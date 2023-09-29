@@ -1,5 +1,5 @@
-import fs from 'fs'
-import yaml from 'js-yaml'
+const fs = require('fs')
+const yaml = require('js-yaml')
 
 const readYamlFile = (file) => {
   const fileContents = fs.readFileSync(file, 'utf8')
