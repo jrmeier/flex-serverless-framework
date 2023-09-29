@@ -1,0 +1,132 @@
+name: Deploy To Env
+on:
+  workflow_call:
+    inputs:
+      deploy_env:
+        description: 'Which environment to deploy to'
+        required: true
+        default: 'alpha'
+        type: string
+      aws_account_id:
+        description: 'AWS Account ID'
+        required: true
+        type: string
+      domain_name:
+        description: 'Domain name'
+        required: true
+        type: string
+      event_bus_name:
+        description: 'Event bus name'
+        required: true
+        type: string
+      new_resources:
+        type: boolean
+        description: 'Should Pulumi create new resources?'
+        default: false
+        required: true
+      secrets_manager_key:
+        description: 'Secrets Manager key'
+        required: true
+        type: string
+      aws_region:
+        description: 'AWS Region'
+        required: true
+        type: string
+      deployment_role_arn:
+        description: 'Deployment role ARN'
+        required: true
+        type: string
+      dd_logs_enabled:
+        type: boolean
+        description: 'Should Datadog add these logs?'
+        default: true
+        required: true
+      dd_traces_enabled:
+        type: boolean
+        description: 'Should Datadog add these traces?'
+        default: false
+        required: true
+
+jobs:
+  cancel:
+    name: 'Cancel Previous Runs'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: styfle/cancel-workflow-action@0.11.0
+        with:
+          access_token: ${{ github.token }}
+
+  getservices:
+    name: Get Services
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.getservices.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v3.3.0
+        with:
+          fetch-depth: '0'
+      - name: Get Services
+        id: getservices
+        run: echo "::set-output name=matrix::$(ls services| awk ' BEGIN { ORS = ""; print "["; } { print "\/\@"$0"\/\@"; } END { print "]"; }' | sed "s^\"^\\\\\"^g;s^\/\@\/\@^\", \"^g;s^\/\@^\"^g")"
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: getservices
+    env: # Or as an environment variable
+      ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+      SLS_WARNING_DISABLE: '*'
+    continue-on-error: false
+    outputs:
+      result: ${{ steps.deploy.outputs.result }}
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{fromJSON(needs.getservices.outputs.matrix)}}
+    steps:
+      - uses: actions/checkout@v3.3.0
+        with:
+          fetch-depth: '0'
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          always-auth: true
+          registry-url: https://npm.pkg.github.com
+          cache: 'npm'
+
+      - name: Install Deps
+        run: npm i
+
+      - name: Create AWS Resources - ${{ inputs.deploy_stage }}
+        if: ${{ inputs.new_resources == true }}
+        run: bash ./cicd/create-infra.sh
+
+      - shell: bash
+        name: Serverless CI Deploy - ${{ matrix.package }}
+        env:
+          SERVICE: ${{ matrix.package }}
+          STAGE: ${{ inputs.deploy_env }}
+          AWS_ACCOUNT_ID: ${{ inputs.aws_account_id }}
+          DOMAIN_NAME: ${{ inputs.domain_name }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_REGION: ${{ inputs.aws_region }}
+          AWS_SECRETS_MANAGER_KEY: ${{ inputs.secrets_manager_key }}
+          EVENT_BUS_NAME: ${{ inputs.EVENT_BUS_NAME }}
+          DEPLOYMENT_IAM_ROLE_ARN: ${{ inputs.deployment_role_arn }}
+          DD_LOGS_ENABLED: ${{ inputs.dd_logs_enabled }}
+          DD_TRACES_ENABLED: ${{ inputs.dd_traces_enabled }}
+          
+        working-directory: ./cicd
+        run: |
+          node deploy.js
+
+      - name: Finalize Create AWS Resources - ${{ inputs.deploy_stage }}
+        if: ${{ inputs.new_resources == true}}
+        run: |
+          echo "Creating API Gateway Base Path Mapping Stage: ${{ inputs.deploy_env }}"
+          cd pulumi/aws-resources/apigateway/base-path-mapping
+          login_url="s3://pulumi-state-workflows-${{ inputs.aws_region }}/github/${{ inputs.aws_region }}/${GITHUB_REPOSITORY#*\/}/${PWD#*\/aws-resources/}"
+          pulumi login "$login_url"
+          pulumi up -y -p 12
+          pulumi logout --all

@@ -277,7 +277,7 @@ async function deploy() {
 
   console.log(`Deploying ${SERVICE} to ${STAGE}`);
   process.chdir(`${ROOT_DIR}/services/${SERVICE}`);
-  spawnCmd(`yarn serverless deploy --stage ${STAGE}`);
+  spawnCmd(`npm serverless deploy --stage ${STAGE}`);
 }
 
 deploy()

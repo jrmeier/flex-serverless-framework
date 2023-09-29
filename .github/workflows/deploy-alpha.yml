@@ -1,0 +1,38 @@
+name: Deploy Alpha
+
+on:
+  workflow_dispatch:
+    inputs:
+      new_resources:
+        type: boolean
+        description: 'Should Pulumi create new resources?'
+        default: false
+        required: true
+      dd_logs_enabled:
+        type: boolean
+        description: 'Should Datadog add these logs?'
+        default: true
+        required: true
+      dd_traces_enabled:
+        type: boolean
+        description: 'Should Datadog add these traces?'
+        default: true
+        required: true
+
+jobs:
+  deploy-alpha:
+    name: 'Deploy Alpha'
+    uses: ./.github/workflows/deploy-env.yml
+    with:
+      deploy_env: alpha
+      aws_account_id: ''
+      domain_name: alpha.yourdomain.com
+      event_bus_name: nerve-alpha-events
+      new_resources: ${{ github.event.inputs.new_resources == 'true' }}
+      secrets_manager_key: your-service-alpha
+      aws_region: us-east-1
+      deployment_role_arn: XXX
+      dd_logs_enabled: ${{ github.event.inputs.dd_logs_enabled == 'true' }}
+      dd_traces_enabled: ${{ github.event.inputs.dd_traces_enabled == 'true' }}
+
+    secrets: inherit
