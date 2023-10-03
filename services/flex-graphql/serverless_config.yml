@@ -10,4 +10,4 @@ functions:
       - http:
           path: /graphql
           method: POST
-          private: true
+          private: false

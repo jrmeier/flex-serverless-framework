@@ -50,6 +50,11 @@
   "dependencies": {
     "@flex/utils": "^1.0.0",
     "commander": "^11.0.0",
+    "crypto-js": "^4.1.1",
+    "graphql": "^16.8.1",
+    "graphql-compose-mongoose": "^9.8.0",
+    "jsonwebtoken": "^9.0.2",
+    "njwt": "^0.4.0",
     "serverless-offline": "^13.1.1",
     "serverless-offline-aws-eventbridge": "^2.1.0"
   }

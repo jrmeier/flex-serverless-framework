@@ -37,3 +37,6 @@ export const AWS_SESSION_TOKEN = getEnv('AWS_SESSION_TOKEN')
 
 export const DB_URI = getRequiredEnvVar('DB_URI')
 export const PROJECT_SLUG = getRequiredEnvVar('PROJECT_SLUG')
+
+export const JWT_SECRET = getRequiredEnvVar('JWT_SECRET')
+export const PASSWORD_SALT = getRequiredEnvVar("PASSWORD_SALT")

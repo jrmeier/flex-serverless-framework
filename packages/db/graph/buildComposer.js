@@ -25,6 +25,8 @@ export const buildComposer = ({
   fields = {},
   sortOptions,
   description = '',
+  canQuery = true,
+  removeFields = [],
 }) => {
   if (!model) throw new Error(`${name}, Model not defined!`)
   let TC = null
@@ -33,6 +35,7 @@ export const buildComposer = ({
     TC = composeMongoose(model, {
       ...customizationOptions,
       name: model.modelName,
+      removeFields,
     })
   } catch (e) {
     TC = schemaComposer.getOTC(model.modelName)
@@ -52,18 +55,19 @@ export const buildComposer = ({
       },
     })
   }
-
-  schemaComposer.Query.addFields({
-    ...{
-      [`${model.modelName}ById`]: TC.mongooseResolvers.findById(),
-      [`${model.modelName}ByIds`]: TC.mongooseResolvers.findByIds(),
-      [`${model.modelName}One`]: TC.mongooseResolvers.findOne(),
-      [`${model.modelName}Many`]: TC.mongooseResolvers.findMany(),
-      [`${model.modelName}Count`]: TC.mongooseResolvers.count(),
-      [`${model.modelName}Connection`]: TC.mongooseResolvers.connection(),
-      [`${model.modelName}Pagination`]: TC.mongooseResolvers.pagination(),
-    },
-  })
+  if (canQuery) {
+    schemaComposer.Query.addFields({
+      ...{
+        [`${model.modelName}ById`]: TC.mongooseResolvers.findById(),
+        [`${model.modelName}ByIds`]: TC.mongooseResolvers.findByIds(),
+        [`${model.modelName}One`]: TC.mongooseResolvers.findOne(),
+        [`${model.modelName}Many`]: TC.mongooseResolvers.findMany(),
+        [`${model.modelName}Count`]: TC.mongooseResolvers.count(),
+        [`${model.modelName}Connection`]: TC.mongooseResolvers.connection(),
+        [`${model.modelName}Pagination`]: TC.mongooseResolvers.pagination(),
+      },
+    })
+  }
 
   schemaComposer.createInputTC({
     name: 'DateRangeInput',
