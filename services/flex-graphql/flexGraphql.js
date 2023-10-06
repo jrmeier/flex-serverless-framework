@@ -70,6 +70,8 @@ export const graphqlHandler = async ({
           if(roles.length > 0) {
             isAdmin = roles.find(r => r.name === 'app:admin')
           }
+        } else {
+          throw new AuthError('User: not found.')
         }
       }
     }

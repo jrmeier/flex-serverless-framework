@@ -4,7 +4,6 @@ import { UserSchema } from './schemas/User/UserSchema'
 import { OrganizationSchema } from './schemas/Organization/OrganizationSchema'
 import { RoleSchema } from './schemas/Role/RoleSchema'
 import { AssignedRoleSchema } from './schemas/Role/AssignedRoleSchema'
-import { PermissionSchema } from './schemas/Permission/PermissionSchema'
 
 import { LimitedCollectionSchema } from './schemas/LimitedCollection/LimitedCollectionSchema'
 /**
@@ -24,7 +23,6 @@ const models = {
   User: UserSchema,
   Organization: OrganizationSchema,
   Role: RoleSchema,
-  Permission: PermissionSchema,
   AssignedRole: AssignedRoleSchema,
   LimitedCollection: LimitedCollectionSchema,
 }

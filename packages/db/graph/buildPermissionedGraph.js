@@ -8,6 +8,7 @@ import { buildGraphInfo } from './buildAllGraphSchema'
 import { buildUserRelations} from '../schemas/User/UserGraph'
 import { buildPublicGraph } from './buildPublicGraphSchema'
 import parsePermissionString from '../permission/parsePermissionString'
+import { buildOrganizationRelations } from '../schemas/Organization/OrganizationGraph'
 
 const buildPermissionedComposer = ({
     model,
@@ -53,26 +54,30 @@ const buildPermissionedComposer = ({
       TC.makeFieldNullable(f)
     })
 
-    
+
     if (canRead) {
       const slt = `-${removeFields.join(' -')}`
       TC.addResolver({
           name: 'Find',
           args: TC.mongooseResolvers.findMany().getArgs(),
-          type: TC,
+          type: [TC],
           resolve: async ({ source, args, context: { db, decodedToken } }) => {
             console.log("running find")
-            const wtf = await db.models[name || model.modelName]
-            .find({...args.filter, ...alwaysFilter})
-            .select(slt)
-            .skip(args.skip)
-            .sort(args.sort)
-            .limit(args.limit)
+            const argsFilter = args.filter || {}
+
+            const query = db.models[name || model.modelName]
+            .find({...argsFilter, ...alwaysFilter})
+
+            if (slt === '-password'){
+              query.select(slt)
+            }
+            const result = await query.skip(args.skip)
+            query.sort(args.sort)
+            query.limit(args.limit)
             
 
-            console.log({wtf})
             // return wtf
-            return []
+            return result
           }
         })
 
@@ -91,6 +96,44 @@ const buildPermissionedComposer = ({
       //     TC.mongooseResolvers[resolverName]().addSortArg(rest)
       //   })
       newQueryFields[`${name || model.modelName}Find`] = TC.getResolver('Find')
+
+      TC.addResolver({
+        name: 'findOne',
+        args: TC.mongooseResolvers.findOne().getArgs(),
+        type: TC,
+        resolve: async ({ source, args, context: { db, decodedToken } }) => {
+          console.log("running find")
+          const argsFilter = args.filter || {}
+          
+          const query = db.models[name || model.modelName]
+          .findOne({...argsFilter, ...alwaysFilter})
+
+          if (slt === '-password'){
+            query.select(slt)
+          }
+          const result = await query.skip(args.skip)
+          query.sort(args.sort)
+          
+          // return wtf
+          return result
+        }
+      })
+
+      // TC.getResolver('Find')
+      // .addSortArg({
+      //   name: 'UPDATED_ASC',
+      //   value: { updatedAt: -1 }
+      // })
+      // .addSortArg({
+      //   name: 'UPDATED_DESC',
+      //   value: { updatedAt: 1 }
+      // })
+  
+    // if (sortOptions) {
+    //   sortOptions.forEach(({ resolverName, ...rest }) => {
+    //     TC.mongooseResolvers[resolverName]().addSortArg(rest)
+    //   })
+    newQueryFields[`${name || model.modelName}Find`] = TC.getResolver('FindOne')
     }
 
     if (canUpdate) {
@@ -209,7 +252,6 @@ const buildPermissionedComposer = ({
       type: MeTC,
       resolve: async ({ source, args, context: { db, decodedToken } }) => {
         console.log('running Me')
-        console.log({ decodedToken })
   
         const user = await db.models.User.findById(decodedToken.userId)
         return user
@@ -275,11 +317,10 @@ export const buildPermissionedGraph = async ({db, user, orgId}) => {
     // if its a model, we will build it, then add it to the schema in the helper function above
     if (p.model) {
       // const canCreate = p.pid === 'c' || p.pid === 'admin'
-      console.log({p})
-      const canCreate = p.pid.includes('c') || p.pid === 'admin'
-      const canRead = p.pid.includes('r') || p.pid === 'admin'
-      const canUpdate = p.pid.includes('u') || p.id === 'admin'
-      const canDelete = p.pid.includes('delete') || p.id === 'admin'
+      const canCreate = p.pid.includes('c')
+      const canRead = p.pid.includes('r')
+      const canUpdate = p.pid.includes('u')
+      const canDelete = p.pid.includes('d')
 
       const TC = buildPermissionedComposer({
         model: db.models[p.model],
@@ -308,7 +349,13 @@ export const buildPermissionedGraph = async ({db, user, orgId}) => {
   // Add relationships between GraphQL types
   // check if the users type exists
   if (typeComposers.UserTC) {
+    console.log("building user relations")
     buildUserRelations(typeComposers)
+  }
+
+  if (typeComposers.OrganizationTC) {
+    console.log("building organization relations")
+    buildOrganizationRelations(typeComposers)
   }
   // Try to build the GraphQL schema, log any errors
   try {

@@ -4,7 +4,6 @@ export const RoleSchema = new Schema({
   name: {
     type: String,
     required: true,
-    unique: true,
   },
   permissions: [{
     type: String,

@@ -26,18 +26,6 @@
                 "source": false
               }
             }
-          },
-          {
-            "id": "e72cf32f7042d7a6",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Data Model.md",
-                "mode": "source",
-                "source": false
-              }
-            }
           }
         ],
         "currentTab": 1

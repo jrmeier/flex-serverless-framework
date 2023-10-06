@@ -4,6 +4,10 @@ import jwt from 'jsonwebtoken'
 import { JWT_SECRET, PASSWORD_SALT } from '@flex/utils/environment'
 
 export const UserSchema = new Schema({
+  name: {
+    type: String,
+    required: false,
+  },
   email: {
     type: String,
     required: true,
@@ -61,12 +65,10 @@ UserSchema.methods.comparePassword = async function (candidatePassword) {
 
 UserSchema.methods.createAccessToken = async function (organizationId = null) {
   // create the access token
-  console.log({organizationId})
   const payload = {
     userId: String(this._id),
     organizationId
   }
-  console.log({payload})
   const accessToken = jwt.sign(
     payload,
     JWT_SECRET,

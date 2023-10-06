@@ -1,12 +1,11 @@
 import { buildComposer } from '@flex/db/graph/buildComposer'
 import { schemaComposer } from 'graphql-compose'
 import { buildUserRelations, buildUserTC } from '../schemas/User/UserGraph'
-import { buildOrganizationGraphTC } from '../schemas/Organization/OrganizationGraph'
+import { buildOrganizationGraphTC, buildOrganizationRelations } from '../schemas/Organization/OrganizationGraph'
 
-
+ 
 import { buildUnionTypes } from './buildUnionTypes'
 import { buildRoleGraphTC } from '../schemas/Role/RoleGraph'
-import { buildPermissionGraphTC } from '../schemas/Permission/PermissionGraph'
 import { buildAssignedRoleTC } from '../schemas/Role/AssignedRoleGraph'
 import { buildUserLogin } from '../schemas/User/UserLoginGraph'
 /**
@@ -21,14 +20,14 @@ export const buildAllGraphSchema = ({ models }) => {
   const typeComposers = {
     UserTC: buildComposer(buildUserTC(models)),
     OrganizationTC: buildComposer(buildOrganizationGraphTC(models)),
-    PermissionTC: buildComposer(buildPermissionGraphTC(models)),
     RoleTC: buildComposer(buildRoleGraphTC(models)),
     AssignedRoleTC: buildComposer(buildAssignedRoleTC(models)),
   }
 
   // Add relationships between GraphQL types
-  // buildUserRelations(typeComposers)
+  buildUserRelations(typeComposers)
   buildUserLogin()
+  buildOrganizationRelations(typeComposers)
   // Try to build the GraphQL schema, log any errors
 
 
